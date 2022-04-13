@@ -4,7 +4,9 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import {TsconfigPathsPlugin} from "tsconfig-paths-webpack-plugin";
 
-const webpackConfig = (env): Configuration => ({
+const env = process.env;
+
+module.exports = {
     entry: "./src/index.tsx",
     ...(env.production || !env.development ? {} : {devtool: "eval-source-map"}),
     resolve: {
@@ -15,6 +17,9 @@ const webpackConfig = (env): Configuration => ({
         path: path.join(__dirname, "/dist"),
         filename: "build.js"
     },
+    devServer: {
+        historyApiFallback: true
+    },
     module: {
         rules: [
             {
@@ -24,7 +29,7 @@ const webpackConfig = (env): Configuration => ({
                     transpileOnly: true
                 },
                 exclude: /dist/
-            }
+            },
         ]
     },
     plugins: [
@@ -42,6 +47,4 @@ const webpackConfig = (env): Configuration => ({
             }
         })
     ]
-});
-
-export default webpackConfig;
+};
