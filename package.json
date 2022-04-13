@@ -1,9 +1,9 @@
 {
-  "name": "react-typescript-starter",
-  "description": "Clean React 17 with TypeScript starter, without usage of create-react-app ⚛",
+  "name": "s30-react",
+  "description": "App that saves information about users",
   "version": "1.0.0",
   "main": "src/index.tsx",
-  "repository": "https://github.com/GR34SE/react-typescript-starter.git",
+  "repository": "https://github.com/balda-kamil/s30-react",
   "license": "MIT",
   "scripts": {
     "develop": "webpack-cli serve --mode=development --env development --open --hot",
@@ -37,6 +37,7 @@
     "webpack-dev-server": "4.8.1"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   }
