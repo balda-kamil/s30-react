@@ -11,6 +11,7 @@ import Checkbox from "@mui/material/Checkbox";
 import FormHelperText from "@mui/material/FormHelperText";
 import {createUser} from "src/api";
 import {useNavigate} from "react-router-dom";
+import {userRoles} from "components/UsersPage/userRoles";
 
 export type Inputs = {
     email: string;
@@ -94,8 +95,6 @@ const Form: React.FC = () => {
         default:
             helperTextEmail = "";
     }
-
-    const userRoles = ["Subscriber", "Editor", "Author", "Administrator"];
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
