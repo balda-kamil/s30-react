@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from "react";
 import {userRoles} from "components/UsersPage/userRoles";
-import {fetchAllUsersByRoles} from "src/api";
+import {fetchAllUsers, fetchAllUsersByRole} from "src/api";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -16,32 +15,34 @@ import {
     TableRow
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-
-export interface UserDataInterface {
-    objArr: {
-        role: string;
-        data: {
-            users: {
-                id: number;
-                name: string;
-                email: string;
-            }[];
-        };
-    }[];
+export interface UsersDataInterface {
+    id: number;
+    name: string;
+    email: string;
 }
 
 const UsersPage: React.FC = () => {
-    const [usersData, setUsersData] = useState<UserDataInterface[]>([]);
+    const [roleUsersData, setRoleUsersData] = useState<UsersDataInterface[]>([]);
+    const [allUsers, setAllUsers] = useState<UsersDataInterface[]>([]);
 
-    const fetchData = async (role) => {
-        const response = await fetchAllUsersByRoles(role);
-        console.log("response", response);
-        setUsersData(response);
+    const fetchData = async (role: string | string[]) => {
+        if (typeof role === "string") {
+            const response = await fetchAllUsersByRole(role);
+            setRoleUsersData(response);
+        } else {
+            const response = await fetchAllUsers(role);
+            const uniqeUsers = response
+                .flat()
+                .filter((v, i, a) => a.findIndex((v2) => v2.id === v.id) === i)
+                .sort((a, b) => b.id - a.id);
+
+            setAllUsers(uniqeUsers);
+        }
     };
 
     useEffect(() => {
-        console.log("usersData", usersData);
-    }, [usersData]);
+        fetchData(userRoles);
+    }, []);
 
     const handleChange = (event: SelectChangeEvent) => {
         fetchData(event.target.value);
@@ -69,7 +70,7 @@ const UsersPage: React.FC = () => {
                     </Select>
                 </FormControl>
 
-                {usersData.length > 0 && (
+                {allUsers.length > 0 && (
                     <TableContainer component={Paper}>
                         <Table aria-label="users table">
                             <TableHead>
@@ -79,7 +80,42 @@ const UsersPage: React.FC = () => {
                                     <TableCell align="right">Name</TableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody></TableBody>
+                            <TableBody>
+                                {allUsers.map((user, i) => {
+                                    return (
+                                        <TableRow key={`${user}_${i}`}>
+                                            <TableCell>{user.id}</TableCell>
+                                            <TableCell align="right">{user.email}</TableCell>
+                                            <TableCell align="right">{user.name}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
+
+                {roleUsersData.length > 0 && (
+                    <TableContainer component={Paper}>
+                        <Table aria-label="users table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>User ID</TableCell>
+                                    <TableCell align="right">Email</TableCell>
+                                    <TableCell align="right">Name</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {roleUsersData.map((user, i) => {
+                                    return (
+                                        <TableRow key={`${user}_${i}`}>
+                                            <TableCell>{user.id}</TableCell>
+                                            <TableCell align="right">{user.email}</TableCell>
+                                            <TableCell align="right">{user.name}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
                         </Table>
                     </TableContainer>
                 )}
