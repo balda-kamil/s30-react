@@ -35,6 +35,7 @@ export const fetchAllUsersByRole = (role: string): Promise<UsersDataInterface[]>
     });
 };
 
+//code over the job scope
 export const fetchAllUsers = (roles: string[]): Promise<UsersDataInterface[]> => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return new Promise<any[]>((res, rej) => {
@@ -45,7 +46,6 @@ export const fetchAllUsers = (roles: string[]): Promise<UsersDataInterface[]> =>
                         axios
                             .get(`${process.env.GET_USERS_BY_ROLE}/${role}`)
                             .then(function (response) {
-                                console.log("heigher response", response);
                                 resolve(response.data.users);
                             })
                             .catch(function (error) {

@@ -18,7 +18,6 @@ export type Inputs = {
     roles: string[];
     name: string;
 };
-//     axios.get("http://localhost/users/role/administrator").then((res) => console.log(res));
 
 const schema = yup.object({
     email: yup.string().email().required(),
